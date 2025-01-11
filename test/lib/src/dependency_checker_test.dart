@@ -6,10 +6,10 @@ import 'package:license_checker2/src/dependency_checker.dart';
 import 'package:package_config/package_config.dart';
 import 'package:test/test.dart';
 
-typedef _PropertyGetter<T> = FutureOr<T> Function(
+typedef PropertyGetter<T> = FutureOr<T> Function(
   DependencyChecker dependencyChecker,
 );
-typedef _ReturnMatcher<M> = M Function();
+typedef ReturnMatcher<M> = M Function();
 
 class DependencyTest<R> {
   DependencyTest({
@@ -17,8 +17,8 @@ class DependencyTest<R> {
     required this.expectedReturnMatcher,
     required this.testDescription,
   });
-  final _PropertyGetter<R> testProperty;
-  final _ReturnMatcher<R> expectedReturnMatcher;
+  final PropertyGetter<R> testProperty;
+  final ReturnMatcher<R> expectedReturnMatcher;
   final String testDescription;
 }
 
