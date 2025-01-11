@@ -3,22 +3,14 @@ import 'dart:io';
 import 'package:args/command_runner.dart';
 import 'package:barbecue/barbecue.dart';
 import 'package:io/io.dart';
+import 'package:license_checker2/src/commands/utils.dart';
+import 'package:license_checker2/src/format.dart';
+import 'package:license_checker2/src/generate_disclaimer.dart';
+import 'package:license_checker2/src/package_checker.dart';
 import 'package:path/path.dart';
-
-import 'package:license_checker/src/config.dart';
-import 'package:license_checker/src/format.dart';
-import 'package:license_checker/src/generate_disclaimer.dart';
-import 'package:license_checker/src/package_checker.dart';
-import 'package:license_checker/src/commands/utils.dart';
 
 /// Command that generates a disclaimer from all dependencies.
 class GenerateDisclaimer extends Command<int> {
-  @override
-  final String name = 'generate-disclaimer';
-  @override
-  final String description =
-      'Generates a disclaimer that includes all licenses.';
-
   /// Creates the generate-disclaimer command and adds two flags.
   /// The [file] flag allows the user to customize name of the discalimer file.
   /// The [path] flag allows the user to customize the write location for the discalimer file.
@@ -49,17 +41,22 @@ class GenerateDisclaimer extends Command<int> {
         defaultsTo: Directory.current.path,
       );
   }
+  @override
+  final String name = 'generate-disclaimer';
+  @override
+  final String description =
+      'Generates a disclaimer that includes all licenses.';
 
   @override
   Future<int> run() async {
-    String disclaimerName = argResults?['file'];
-    String outputPath = argResults?['path'];
-    bool noDevDependencies = argResults?['noDev'];
-    bool skipPrompts = argResults?['yes'];
-    bool showDirectDepsOnly = globalResults?['direct'];
-    String configPath = globalResults?['config'];
+    final String disclaimerName = argResults?['file'];
+    final String outputPath = argResults?['path'];
+    final bool noDevDependencies = argResults?['noDev'];
+    final bool skipPrompts = argResults?['yes'];
+    final bool showDirectDepsOnly = globalResults?['direct'];
+    final String configPath = globalResults?['config'];
 
-    Config? config = loadConfig(configPath);
+    final config = loadConfig(configPath);
     if (config == null) {
       return ExitCode.ioError.code;
     }
@@ -68,11 +65,10 @@ class GenerateDisclaimer extends Command<int> {
       'Generating disclaimer for ${showDirectDepsOnly ? 'direct' : 'all'} dependencies ...',
     );
 
-    PackageChecker packageConfig =
+    final packageConfig =
         await PackageChecker.fromCurrentDirectory(config: config);
 
-    DisclaimerDisplay<List<Row>, List<StringBuffer>> disclaimer =
-        await generateDisclaimers<Row, StringBuffer>(
+    final disclaimer = await generateDisclaimers<Row, StringBuffer>(
       config: config,
       packageConfig: packageConfig,
       showDirectDepsOnly: showDirectDepsOnly,
@@ -86,15 +82,15 @@ class GenerateDisclaimer extends Command<int> {
     );
 
     // Write disclaimer
-    String outputFilePath = join(outputPath, disclaimerName);
+    final outputFilePath = join(outputPath, disclaimerName);
     if (skipPrompts) {
       _writeFile(outputFilePath: outputFilePath, disclaimer: disclaimer);
       return ExitCode.success.code;
     }
 
-    bool correctInfo = _promptYN('Is this information correct?');
+    final correctInfo = _promptYN('Is this information correct?');
     if (correctInfo) {
-      bool writeFile = _promptYN(
+      final writeFile = _promptYN(
         'Would you like to write the disclaimer to $outputFilePath?',
       );
       if (writeFile) {
@@ -112,7 +108,7 @@ class GenerateDisclaimer extends Command<int> {
 
   bool _promptYN(String prompt) {
     stdout.write('$prompt (y/n): ');
-    String? input = stdin.readLineSync();
+    final input = stdin.readLineSync();
     if (input == 'y') {
       return true;
     }
@@ -128,10 +124,10 @@ class GenerateDisclaimer extends Command<int> {
     required DisclaimerDisplay<List<Row>, List<StringBuffer>> disclaimer,
     required String outputFilePath,
   }) {
-    File output = File(outputFilePath);
+    final output = File(outputFilePath);
     printInfo('Writing disclaimer to file $outputFilePath ...');
-    StringBuffer disclaimerText = StringBuffer();
-    for (StringBuffer d in disclaimer.file) {
+    final disclaimerText = StringBuffer();
+    for (var d in disclaimer.file) {
       disclaimerText.write(d.toString());
     }
     output.writeAsStringSync(disclaimerText.toString());

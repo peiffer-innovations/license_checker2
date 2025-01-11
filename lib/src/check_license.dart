@@ -1,7 +1,7 @@
 import 'dart:io';
 
-import 'package:license_checker/src/dependency_checker.dart';
-import 'package:license_checker/src/package_checker.dart';
+import 'package:license_checker2/src/dependency_checker.dart';
+import 'package:license_checker2/src/package_checker.dart';
 
 /// Type defintion for the function that formats the display of the parsed license
 /// result.
@@ -14,18 +14,6 @@ typedef LicenseDisplayFunction<D> = D Function({
 /// Encapsulates a generic license display along with a priority that can be used
 /// for sorting.
 class LicenseDisplayWithPriority<D> {
-  /// The formatted license display.
-  final D display;
-
-  /// The associated license status.
-  final LicenseStatus status;
-
-  /// The priority of the liscense display based on the status.
-  final int priority;
-
-  /// The name of the package
-  final String name;
-
   LicenseDisplayWithPriority._(
     this.display,
     this.status,
@@ -39,7 +27,7 @@ class LicenseDisplayWithPriority<D> {
     required LicenseStatus licenseStatus,
     required String packageName,
   }) {
-    int priority = 0;
+    var priority = 0;
     switch (licenseStatus) {
       case LicenseStatus.approved:
         {
@@ -79,6 +67,18 @@ class LicenseDisplayWithPriority<D> {
       packageName,
     );
   }
+
+  /// The formatted license display.
+  final D display;
+
+  /// The associated license status.
+  final LicenseStatus status;
+
+  /// The priority of the liscense display based on the status.
+  final int priority;
+
+  /// The name of the package
+  final String name;
 }
 
 /// Checks all licenses in a the package.
@@ -96,16 +96,16 @@ Future<List<LicenseDisplayWithPriority<D>>> checkAllPackageLicenses<D>({
   bool sortByPriority = false,
   bool sortByName = false,
 }) async {
-  List<LicenseDisplayWithPriority<D>> licenses = [];
+  final licenses = <LicenseDisplayWithPriority<D>>[];
 
-  for (DependencyChecker package in packageConfig.packages) {
+  for (var package in packageConfig.packages) {
     if (showDirectDepsOnly) {
       // Ignore dependencies not defined in the packages pubspec.yaml
       if (!packageConfig.pubspec.dependencies.containsKey(package.name)) {
         continue;
       }
     }
-    LicenseStatus status = await package.packageLicenseStatus;
+    final status = await package.packageLicenseStatus;
     if (!filterApproved ||
         (filterApproved &&
             status != LicenseStatus.approved &&
@@ -126,7 +126,7 @@ Future<List<LicenseDisplayWithPriority<D>>> checkAllPackageLicenses<D>({
   if (sortByPriority && sortByName) {
     // sort by priority first
     licenses.sort((a, b) {
-      int cmp = _prioritySort(a, b);
+      final cmp = _prioritySort(a, b);
       if (cmp != 0) {
         return cmp;
       }

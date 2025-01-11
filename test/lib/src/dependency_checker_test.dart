@@ -1,11 +1,10 @@
-import 'dart:io';
 import 'dart:async';
+import 'dart:io';
 
+import 'package:license_checker2/src/config.dart';
+import 'package:license_checker2/src/dependency_checker.dart';
 import 'package:package_config/package_config.dart';
 import 'package:test/test.dart';
-
-import 'package:license_checker/src/config.dart';
-import 'package:license_checker/src/dependency_checker.dart';
 
 typedef _PropertyGetter<T> = FutureOr<T> Function(
   DependencyChecker dependencyChecker,
@@ -13,34 +12,33 @@ typedef _PropertyGetter<T> = FutureOr<T> Function(
 typedef _ReturnMatcher<M> = M Function();
 
 class DependencyTest<R> {
-  final _PropertyGetter<R> testProperty;
-  final _ReturnMatcher<R> expectedReturnMatcher;
-  final String testDescription;
-
   DependencyTest({
     required this.testProperty,
     required this.expectedReturnMatcher,
     required this.testDescription,
   });
+  final _PropertyGetter<R> testProperty;
+  final _ReturnMatcher<R> expectedReturnMatcher;
+  final String testDescription;
 }
 
 void main() {
   group('General tests', () {
-    Config config =
+    final config =
         Config.fromFile(File('test/lib/src/fixtures/valid_config.yaml'));
-    DependencyChecker dc = DependencyChecker(
+    final dc = DependencyChecker(
       config: config,
       package: Package(
         'dodgers',
         Uri(
           scheme: 'file',
-          path: Directory.current.absolute.path +
-              '/test/lib/src/fixtures/dodgers/',
+          path:
+              '${Directory.current.absolute.path}/test/lib/src/fixtures/dodgers/',
         ),
       ),
     );
 
-    List<DependencyTest<Object?>> _validTests = [
+    final validTests = <DependencyTest<Object?>>[
       DependencyTest<Object?>(
         testProperty: (d) => d.name,
         expectedReturnMatcher: () => 'dodgers',
@@ -49,8 +47,7 @@ void main() {
       DependencyTest<Object?>(
         testProperty: (d) => dc.licenseFile?.path,
         expectedReturnMatcher: () =>
-            Directory.current.absolute.path +
-            '/test/lib/src/fixtures/dodgers/LICENSE',
+            '${Directory.current.absolute.path}/test/lib/src/fixtures/dodgers/LICENSE',
         testDescription: 'should get a license file',
       ),
       DependencyTest<Object?>(
@@ -83,29 +80,29 @@ void main() {
       ),
     ];
 
-    for (DependencyTest<Object?> t in _validTests) {
+    for (var t in validTests) {
       test(t.testDescription, () async {
         expect(await t.testProperty(dc), t.expectedReturnMatcher());
       });
     }
   });
   group('license override', () {
-    Config config = Config.fromFile(
+    final config = Config.fromFile(
       File('test/lib/src/fixtures/valid_config_license_override.yaml'),
     );
-    DependencyChecker dc = DependencyChecker(
+    final dc = DependencyChecker(
       config: config,
       package: Package(
         'dodgers',
         Uri(
           scheme: 'file',
-          path: Directory.current.absolute.path +
-              '/test/lib/src/fixtures/dodgers/',
+          path:
+              '${Directory.current.absolute.path}/test/lib/src/fixtures/dodgers/',
         ),
       ),
     );
 
-    List<DependencyTest<Object?>> _validTests = [
+    final validTests = <DependencyTest<Object?>>[
       DependencyTest<Object?>(
         testProperty: (d) async {
           return d.licenseName;
@@ -122,7 +119,7 @@ void main() {
       ),
     ];
 
-    for (DependencyTest<Object?> t in _validTests) {
+    for (var t in validTests) {
       test(t.testDescription, () async {
         expect(await t.testProperty(dc), t.expectedReturnMatcher());
       });
@@ -130,21 +127,22 @@ void main() {
   });
 
   group('No license file', () {
-    Config config =
-        Config.fromFile(File('test/lib/src/fixtures/valid_config.yaml'));
-    DependencyChecker dc = DependencyChecker(
+    final config = Config.fromFile(
+      File('test/lib/src/fixtures/valid_config.yaml'),
+    );
+    final dc = DependencyChecker(
       config: config,
       package: Package(
         'angeles',
         Uri(
           scheme: 'file',
-          path: Directory.current.absolute.path +
-              '/test/lib/src/fixtures/angeles/',
+          path:
+              '${Directory.current.absolute.path}/test/lib/src/fixtures/angeles/',
         ),
       ),
     );
 
-    List<DependencyTest<Object?>> _validTests = [
+    final validTests = <DependencyTest<Object?>>[
       DependencyTest<Object?>(
         testProperty: (d) => d.name,
         expectedReturnMatcher: () => 'angeles',
@@ -185,7 +183,7 @@ void main() {
       ),
     ];
 
-    for (DependencyTest<Object?> t in _validTests) {
+    for (var t in validTests) {
       test(t.testDescription, () async {
         expect(await t.testProperty(dc), t.expectedReturnMatcher());
       });
@@ -193,36 +191,36 @@ void main() {
   });
 
   group('Unknown license file', () {
-    Config config =
+    final config =
         Config.fromFile(File('test/lib/src/fixtures/valid_config.yaml'));
-    DependencyChecker dc = DependencyChecker(
+    final dc = DependencyChecker(
       config: config,
       package: Package(
         'mets',
         Uri(
           scheme: 'file',
           path:
-              Directory.current.absolute.path + '/test/lib/src/fixtures/mets/',
+              '${Directory.current.absolute.path}/test/lib/src/fixtures/mets/',
         ),
       ),
     );
 
-    Config configChanged = Config.fromFile(
+    final configChanged = Config.fromFile(
       File('test/lib/src/fixtures/valid_config_approved_unknown_license.yaml'),
     );
-    DependencyChecker dcChanged = DependencyChecker(
+    final dcChanged = DependencyChecker(
       config: configChanged,
       package: Package(
         'mets',
         Uri(
           scheme: 'file',
           path:
-              Directory.current.absolute.path + '/test/lib/src/fixtures/mets/',
+              '${Directory.current.absolute.path}/test/lib/src/fixtures/mets/',
         ),
       ),
     );
 
-    List<DependencyTest<Object?>> _validTests = [
+    final validTests = <DependencyTest<Object?>>[
       DependencyTest<Object?>(
         testProperty: (d) => d.name,
         expectedReturnMatcher: () => 'mets',
@@ -231,8 +229,7 @@ void main() {
       DependencyTest<Object?>(
         testProperty: (d) => d.licenseFile?.path,
         expectedReturnMatcher: () =>
-            Directory.current.absolute.path +
-            '/test/lib/src/fixtures/mets/LICENSE',
+            '${Directory.current.absolute.path}/test/lib/src/fixtures/mets/LICENSE',
         testDescription: 'should return the license file',
       ),
       DependencyTest<Object?>(
@@ -260,7 +257,7 @@ void main() {
       ),
     ];
 
-    for (DependencyTest<Object?> t in _validTests) {
+    for (var t in validTests) {
       test(t.testDescription, () async {
         expect(await t.testProperty(dc), t.expectedReturnMatcher());
       });
@@ -268,34 +265,34 @@ void main() {
   });
 
   group('Approved Package', () {
-    Config config =
+    final config =
         Config.fromFile(File('test/lib/src/fixtures/valid_config.yaml'));
-    DependencyChecker dc = DependencyChecker(
+    final dc = DependencyChecker(
       config: config,
       package: Package(
         'mlb',
         Uri(
           scheme: 'file',
-          path: Directory.current.absolute.path + '/test/lib/src/fixtures/mlb/',
+          path: '${Directory.current.absolute.path}/test/lib/src/fixtures/mlb/',
         ),
       ),
     );
 
-    Config configChanged = Config.fromFile(
+    final configChanged = Config.fromFile(
       File('test/lib/src/fixtures/valid_config_changed_approved_pkg_lic.yaml'),
     );
-    DependencyChecker dcChanged = DependencyChecker(
+    final dcChanged = DependencyChecker(
       config: configChanged,
       package: Package(
         'mlb',
         Uri(
           scheme: 'file',
-          path: Directory.current.absolute.path + '/test/lib/src/fixtures/mlb/',
+          path: '${Directory.current.absolute.path}/test/lib/src/fixtures/mlb/',
         ),
       ),
     );
 
-    List<DependencyTest<Object?>> _validTests = [
+    final validTests = <DependencyTest<Object?>>[
       DependencyTest<Object?>(
         testProperty: (d) => d.name,
         expectedReturnMatcher: () => 'mlb',
@@ -304,8 +301,7 @@ void main() {
       DependencyTest<Object?>(
         testProperty: (d) => dc.licenseFile?.path,
         expectedReturnMatcher: () =>
-            Directory.current.absolute.path +
-            '/test/lib/src/fixtures/mlb/LICENSE',
+            '${Directory.current.absolute.path}/test/lib/src/fixtures/mlb/LICENSE',
         testDescription: 'should return the license file',
       ),
       DependencyTest<Object?>(
@@ -348,7 +344,7 @@ void main() {
       ),
     ];
 
-    for (DependencyTest<Object?> t in _validTests) {
+    for (var t in validTests) {
       test(t.testDescription, () async {
         expect(await t.testProperty(dc), t.expectedReturnMatcher());
       });
@@ -356,21 +352,21 @@ void main() {
   });
 
   group('Not a package with pubspec.yaml', () {
-    Config config =
+    final config =
         Config.fromFile(File('test/lib/src/fixtures/valid_config.yaml'));
-    DependencyChecker dc = DependencyChecker(
+    final dc = DependencyChecker(
       config: config,
       package: Package(
         'padres',
         Uri(
           scheme: 'file',
-          path: Directory.current.absolute.path +
-              '/test/lib/src/fixtures/padres/',
+          path:
+              '${Directory.current.absolute.path}/test/lib/src/fixtures/padres/',
         ),
       ),
     );
 
-    List<DependencyTest<Object?>> _validTests = [
+    final validTests = <DependencyTest<Object?>>[
       DependencyTest<Object?>(
         testProperty: (d) => d.name,
         expectedReturnMatcher: () => 'padres',
@@ -379,8 +375,7 @@ void main() {
       DependencyTest<Object?>(
         testProperty: (d) => dc.licenseFile?.path,
         expectedReturnMatcher: () =>
-            Directory.current.absolute.path +
-            '/test/lib/src/fixtures/padres/LICENSE',
+            '${Directory.current.absolute.path}/test/lib/src/fixtures/padres/LICENSE',
         testDescription: 'should return the license file',
       ),
       DependencyTest<Object?>(
@@ -418,7 +413,7 @@ void main() {
       ),
     ];
 
-    for (DependencyTest<Object?> t in _validTests) {
+    for (var t in validTests) {
       test(t.testDescription, () async {
         expect(await t.testProperty(dc), t.expectedReturnMatcher());
       });

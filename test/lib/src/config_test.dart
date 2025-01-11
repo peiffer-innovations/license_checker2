@@ -1,32 +1,20 @@
 import 'dart:io';
 
+import 'package:license_checker2/src/config.dart';
 import 'package:test/test.dart';
 
-import 'package:license_checker/src/config.dart';
-
 class _ConfigErrorTest {
-  final String testDescription;
-  final String fileName;
-  final String expectedErrorMessage;
-
   _ConfigErrorTest({
     required this.fileName,
     required this.expectedErrorMessage,
     required this.testDescription,
   });
+  final String testDescription;
+  final String fileName;
+  final String expectedErrorMessage;
 }
 
 class _ConfigSuccessTest {
-  final String testDescription;
-  final String fileName;
-  final List<String> expectedPermittedLicenses;
-  final List<String> expectedRejectedLicenses;
-  final Map<String, List<String>> expectedApprovedPackages;
-  final Map<String, String> expectedCopyrightNotice;
-  final List<String> expectedOmitDisclaimer;
-  final Map<String, String> expectedPackageLicenseOverride;
-  final Map<String, String> expectedPackageSourceOverride;
-
   _ConfigSuccessTest({
     required this.fileName,
     required this.expectedPermittedLicenses,
@@ -38,6 +26,15 @@ class _ConfigSuccessTest {
     required this.expectedPackageLicenseOverride,
     required this.expectedPackageSourceOverride,
   });
+  final String testDescription;
+  final String fileName;
+  final List<String> expectedPermittedLicenses;
+  final List<String> expectedRejectedLicenses;
+  final Map<String, List<String>> expectedApprovedPackages;
+  final Map<String, String> expectedCopyrightNotice;
+  final List<String> expectedOmitDisclaimer;
+  final Map<String, String> expectedPackageLicenseOverride;
+  final Map<String, String> expectedPackageSourceOverride;
 }
 
 void main() {
@@ -56,7 +53,7 @@ void main() {
   });
 
   group('Valid Config', () {
-    List<_ConfigSuccessTest> configSuccessTests = [
+    final configSuccessTests = <_ConfigSuccessTest>[
       _ConfigSuccessTest(
         testDescription: 'Parse minimal valid config',
         fileName: 'valid_config_minimal',
@@ -147,9 +144,9 @@ void main() {
         expectedPackageSourceOverride: {'dodgers': 'https://dodgers.com'},
       ),
     ];
-    for (_ConfigSuccessTest t in configSuccessTests) {
+    for (var t in configSuccessTests) {
       test(t.testDescription, () {
-        Config validConfig =
+        final validConfig =
             Config.fromFile(File('test/lib/src/fixtures/${t.fileName}.yaml'));
 
         expect(validConfig.permittedLicenses, t.expectedPermittedLicenses);
@@ -170,7 +167,7 @@ void main() {
   });
 
   group('Invalid Config', () {
-    List<_ConfigErrorTest> configErrorTests = [
+    final configErrorTests = <_ConfigErrorTest>[
       _ConfigErrorTest(
         testDescription:
             'throw format exception on invalid permitted license config',
@@ -273,7 +270,7 @@ void main() {
       ),
     ];
 
-    for (_ConfigErrorTest t in configErrorTests) {
+    for (var t in configErrorTests) {
       test(t.testDescription, () {
         expect(
           () {

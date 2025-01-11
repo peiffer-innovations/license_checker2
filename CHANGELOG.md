@@ -1,56 +1,60 @@
-## 0.0.1
+## 2.0.0 - January 11th, 2025
 
-- Initial version
-
-## 0.0.2
-
-- General refactors
-- Add disclaimer generator
-- Add test
-
-## 0.0.3
-
-- More refactors
-- Add tests
-- Expose some private library functions
-- Add ability to override the parsed copyright notice in the configuration file. ("copyrightNotice" field)
-
-## 0.0.4
-
-- Clean up print statements.
-- Add successful completion print.
-
-## 0.0.5
-
-- Fix exit code conditional
-
-## 1.0.0
-
-- Add priority and alphabetical sorting option
-
-## 1.1.0
-
-- Add version flag
-- Use proper exit codes
-
-## 1.2.0
-
-- Add yes flag to skip prompts when generating disclaimers
-- Fix exit codes
-
-## 1.2.1
-
-- Allow unknown license to be approved via the config file
-
-## 1.3.0
-
-- Allow overriding package license text used in disclaimer.
-- Allow omitting of packages from the generated disclaimer.
-
-## 1.4.0
-
-- Allow overrideing package source locations used in the disclaimer.
+* Forked
+* Updated to work with [Dart Workspaces](https://dart.dev/tools/pub/workspaces)
 
 ## 1.5.0
 
-- Allow omitting of all dev dependencies in the generated disclaimer.
+* Allow omitting of all dev dependencies in the generated disclaimer.
+
+## 1.4.0
+
+* Allow overrideing package source locations used in the disclaimer.
+
+## 1.3.0
+
+* Allow overriding package license text used in disclaimer.
+* Allow omitting of packages from the generated disclaimer.
+
+## 1.2.1
+
+* Allow unknown license to be approved via the config file
+
+## 1.2.0
+
+* Add yes flag to skip prompts when generating disclaimers
+* Fix exit codes
+
+## 1.1.0
+
+* Add version flag
+* Use proper exit codes
+
+## 1.0.0
+
+* Add priority and alphabetical sorting option
+
+## 0.0.5
+
+* Fix exit code conditional
+
+## 0.0.4
+
+* Clean up print statements.
+* Add successful completion print.
+## 0.0.3
+
+* More refactors
+* Add tests
+* Expose some private library functions
+* Add ability to override the parsed copyright notice in the configuration file. ("copyrightNotice" field)
+
+## 0.0.2
+
+* General refactors
+* Add disclaimer generator
+* Add test
+
+## 0.0.1
+
+* Initial version

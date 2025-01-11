@@ -3,22 +3,14 @@ import 'dart:io';
 import 'package:args/command_runner.dart';
 import 'package:barbecue/barbecue.dart';
 import 'package:io/io.dart';
-
-import 'package:license_checker/src/config.dart';
-import 'package:license_checker/src/format.dart';
-import 'package:license_checker/src/dependency_checker.dart';
-import 'package:license_checker/src/check_license.dart';
-import 'package:license_checker/src/package_checker.dart';
-import 'package:license_checker/src/commands/utils.dart';
+import 'package:license_checker2/src/check_license.dart';
+import 'package:license_checker2/src/commands/utils.dart';
+import 'package:license_checker2/src/dependency_checker.dart';
+import 'package:license_checker2/src/format.dart';
+import 'package:license_checker2/src/package_checker.dart';
 
 /// Command that checks license for compliance.
 class CheckLicenses extends Command<int> {
-  @override
-  final String name = 'check-licenses';
-  @override
-  final String description =
-      'Checks licenses of all dependencies for compliance.';
-
   /// Creates the check-license command and add a flag to show only "problematic"
   /// packages (non approved and permitted packages).
   CheckLicenses() {
@@ -44,20 +36,25 @@ class CheckLicenses extends Command<int> {
         defaultsTo: false,
       );
   }
+  @override
+  final String name = 'check-licenses';
+  @override
+  final String description =
+      'Checks licenses of all dependencies for compliance.';
 
   @override
   Future<int> run() async {
-    bool filterApproved = argResults?['problematic'];
-    bool prioritySort = argResults?['priority-sort'];
-    bool alphaSort = argResults?['alpha-sort'];
-    bool showDirectDepsOnly = globalResults?['direct'];
-    String configPath = globalResults?['config'];
+    final bool filterApproved = argResults?['problematic'];
+    final bool prioritySort = argResults?['priority-sort'];
+    final bool alphaSort = argResults?['alpha-sort'];
+    final bool showDirectDepsOnly = globalResults?['direct'];
+    final String configPath = globalResults?['config'];
 
     if (filterApproved) {
       printInfo('Filtering out approved packages ...');
     }
 
-    Config? config = loadConfig(configPath);
+    final config = loadConfig(configPath);
     if (config == null) {
       return ExitCode.ioError.code;
     }
@@ -66,9 +63,9 @@ class CheckLicenses extends Command<int> {
       'Checking ${showDirectDepsOnly ? 'direct' : 'all'} dependencies ...',
     );
 
-    List<LicenseDisplayWithPriority<Row>> rows = [];
+    var rows = <LicenseDisplayWithPriority<Row>>[];
     try {
-      PackageChecker packageConfig =
+      final packageConfig =
           await PackageChecker.fromCurrentDirectory(config: config);
       rows = await checkAllPackageLicenses<Row>(
         packageConfig: packageConfig,
@@ -87,7 +84,7 @@ class CheckLicenses extends Command<int> {
       print(formatLicenseTable(rows.map((e) => e.display).toList()).render());
     }
 
-    int exitCode = rows.any(
+    final exitCode = rows.any(
       (r) =>
           r.status != LicenseStatus.approved &&
           r.status != LicenseStatus.permitted,

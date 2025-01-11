@@ -1,15 +1,20 @@
 import 'dart:io';
 
+import 'package:license_checker2/src/check_license.dart';
+import 'package:license_checker2/src/dependency_checker.dart';
+import 'package:license_checker2/src/package_checker.dart';
+import 'package:mockito/mockito.dart';
 import 'package:pana/pana.dart';
 import 'package:test/test.dart';
 
-import 'package:mockito/mockito.dart';
-
-import 'package:license_checker/src/check_license.dart';
-import 'package:license_checker/src/package_checker.dart';
-import 'package:license_checker/src/dependency_checker.dart';
-
 class MockedDependencyChecker extends Mock implements DependencyChecker {
+  MockedDependencyChecker(this.name, this._status) : _licenseFile = null;
+
+  MockedDependencyChecker.withLicenseFile(
+    this.name,
+    this._status,
+    this._licenseFile,
+  );
   @override
   final String name;
 
@@ -32,17 +37,10 @@ class MockedDependencyChecker extends Mock implements DependencyChecker {
 
   @override
   File? get licenseFile => _licenseFile;
-
-  MockedDependencyChecker(this.name, this._status) : _licenseFile = null;
-
-  MockedDependencyChecker.withLicenseFile(
-    this.name,
-    this._status,
-    this._licenseFile,
-  );
 }
 
 class MockedPackageChecker extends Mock implements PackageChecker {
+  MockedPackageChecker(this.packages);
   @override
   final List<DependencyChecker> packages;
 
@@ -53,8 +51,6 @@ class MockedPackageChecker extends Mock implements PackageChecker {
       'dependencies': {'Dodgers': '1.0.0', 'Giants': '1.0.0'},
     },
   );
-
-  MockedPackageChecker(this.packages);
 }
 
 void main() {
@@ -69,7 +65,7 @@ void main() {
 
     test('should check the license and return the display for one package',
         () async {
-      DependencyChecker package =
+      final DependencyChecker package =
           MockedDependencyChecker('Dodgers', LicenseStatus.approved);
 
       expect(
@@ -82,12 +78,11 @@ void main() {
     });
 
     test('should check the license of all dependencies of a package', () async {
-      PackageChecker packageConfig = MockedPackageChecker([
+      final PackageChecker packageConfig = MockedPackageChecker([
         MockedDependencyChecker('Dodgers', LicenseStatus.approved),
         MockedDependencyChecker('Giants', LicenseStatus.rejected),
       ]);
-      List<LicenseDisplayWithPriority<String>> result =
-          await checkAllPackageLicenses(
+      final result = await checkAllPackageLicenses(
         packageConfig: packageConfig,
         showDirectDepsOnly: false,
         filterApproved: false,
@@ -107,13 +102,12 @@ void main() {
 
     test('should check the license of direct dependencies of a package',
         () async {
-      PackageChecker packageConfig = MockedPackageChecker([
+      final PackageChecker packageConfig = MockedPackageChecker([
         MockedDependencyChecker('Dodgers', LicenseStatus.approved),
         MockedDependencyChecker('Giants', LicenseStatus.rejected),
         MockedDependencyChecker('Kings', LicenseStatus.approved),
       ]);
-      List<LicenseDisplayWithPriority<String>> result =
-          await checkAllPackageLicenses(
+      final result = await checkAllPackageLicenses(
         packageConfig: packageConfig,
         showDirectDepsOnly: true,
         filterApproved: false,
@@ -134,7 +128,7 @@ void main() {
     test(
         'should check the license of all dependencies of a package and filter out approved and permitted license',
         () async {
-      PackageChecker packageConfig = MockedPackageChecker([
+      final PackageChecker packageConfig = MockedPackageChecker([
         MockedDependencyChecker('Dodgers', LicenseStatus.approved),
         MockedDependencyChecker('Giants', LicenseStatus.rejected),
         MockedDependencyChecker('Angles', LicenseStatus.unknown),
@@ -142,8 +136,7 @@ void main() {
         MockedDependencyChecker('Padres', LicenseStatus.needsApproval),
         MockedDependencyChecker('Rockies', LicenseStatus.noLicense),
       ]);
-      List<LicenseDisplayWithPriority<String>> result =
-          await checkAllPackageLicenses(
+      final result = await checkAllPackageLicenses(
         packageConfig: packageConfig,
         showDirectDepsOnly: false,
         filterApproved: true,
@@ -168,7 +161,7 @@ void main() {
     test(
         'should check the license of all dependencies and sort them correctly by status priority',
         () async {
-      PackageChecker packageConfig = MockedPackageChecker([
+      final PackageChecker packageConfig = MockedPackageChecker([
         MockedDependencyChecker('Dodgers', LicenseStatus.approved),
         MockedDependencyChecker('Giants', LicenseStatus.rejected),
         MockedDependencyChecker('Angles', LicenseStatus.unknown),
@@ -176,8 +169,7 @@ void main() {
         MockedDependencyChecker('Padres', LicenseStatus.needsApproval),
         MockedDependencyChecker('Rockies', LicenseStatus.noLicense),
       ]);
-      List<LicenseDisplayWithPriority<String>> result =
-          await checkAllPackageLicenses(
+      final result = await checkAllPackageLicenses(
         packageConfig: packageConfig,
         showDirectDepsOnly: false,
         filterApproved: false,
@@ -207,7 +199,7 @@ void main() {
     test(
         'should check the license of all dependencies and sort them correctly by name',
         () async {
-      PackageChecker packageConfig = MockedPackageChecker([
+      final PackageChecker packageConfig = MockedPackageChecker([
         MockedDependencyChecker('Dodgers', LicenseStatus.approved),
         MockedDependencyChecker('Giants', LicenseStatus.rejected),
         MockedDependencyChecker('Angles', LicenseStatus.unknown),
@@ -215,8 +207,7 @@ void main() {
         MockedDependencyChecker('Padres', LicenseStatus.needsApproval),
         MockedDependencyChecker('Rockies', LicenseStatus.noLicense),
       ]);
-      List<LicenseDisplayWithPriority<String>> result =
-          await checkAllPackageLicenses(
+      final result = await checkAllPackageLicenses(
         packageConfig: packageConfig,
         showDirectDepsOnly: false,
         filterApproved: false,
@@ -246,7 +237,7 @@ void main() {
     test(
         'should check the license of all dependencies and sort them correctly by status priority and then name',
         () async {
-      PackageChecker packageConfig = MockedPackageChecker([
+      final PackageChecker packageConfig = MockedPackageChecker([
         MockedDependencyChecker('Dodgers', LicenseStatus.approved),
         MockedDependencyChecker('Giants', LicenseStatus.rejected),
         MockedDependencyChecker('Angles', LicenseStatus.unknown),
@@ -254,8 +245,7 @@ void main() {
         MockedDependencyChecker('Padres', LicenseStatus.needsApproval),
         MockedDependencyChecker('Rockies', LicenseStatus.noLicense),
       ]);
-      List<LicenseDisplayWithPriority<String>> result =
-          await checkAllPackageLicenses(
+      final result = await checkAllPackageLicenses(
         packageConfig: packageConfig,
         showDirectDepsOnly: false,
         filterApproved: false,

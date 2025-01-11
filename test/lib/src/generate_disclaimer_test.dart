@@ -1,16 +1,21 @@
 import 'dart:io';
 
+import 'package:license_checker2/src/config.dart';
+import 'package:license_checker2/src/dependency_checker.dart';
+import 'package:license_checker2/src/generate_disclaimer.dart';
+import 'package:license_checker2/src/package_checker.dart';
+import 'package:mockito/mockito.dart';
 import 'package:pana/pana.dart';
 import 'package:test/test.dart';
 
-import 'package:mockito/mockito.dart';
-
-import 'package:license_checker/src/generate_disclaimer.dart';
-import 'package:license_checker/src/config.dart';
-import 'package:license_checker/src/package_checker.dart';
-import 'package:license_checker/src/dependency_checker.dart';
-
 class MockedDependencyChecker extends Mock implements DependencyChecker {
+  MockedDependencyChecker(this.name, this._status) : _licenseFile = null;
+
+  MockedDependencyChecker.withLicenseFile(
+    this.name,
+    this._status,
+    this._licenseFile,
+  );
   @override
   final String name;
 
@@ -33,17 +38,10 @@ class MockedDependencyChecker extends Mock implements DependencyChecker {
 
   @override
   File? get licenseFile => _licenseFile;
-
-  MockedDependencyChecker(this.name, this._status) : _licenseFile = null;
-
-  MockedDependencyChecker.withLicenseFile(
-    this.name,
-    this._status,
-    this._licenseFile,
-  );
 }
 
 class MockedPackageChecker extends Mock implements PackageChecker {
+  MockedPackageChecker(this.packages);
   @override
   final List<DependencyChecker> packages;
 
@@ -54,8 +52,6 @@ class MockedPackageChecker extends Mock implements PackageChecker {
     'dev_dependencies': {'giants': '1.0.0'},
     'packages': {'Dodgers': '1.0.0', 'angles': '1.0.0', 'giants': '1.0.0'},
   });
-
-  MockedPackageChecker(this.packages);
 }
 
 void main() {
@@ -80,10 +76,9 @@ void main() {
     }
 
     test('should generate the disclaimer for a single package', () async {
-      Config config =
+      final config =
           Config.fromFile(File('test/lib/src/fixtures/valid_config.yaml'));
-      DisclaimerDisplay<String, String> result =
-          await generatePackageDisclaimer<String, String>(
+      final result = await generatePackageDisclaimer<String, String>(
         config: config,
         package: MockedDependencyChecker.withLicenseFile(
           'Dodgers',
@@ -103,11 +98,10 @@ void main() {
 
     test('should generate the disclaimer with package license overrides',
         () async {
-      Config config = Config.fromFile(
+      final config = Config.fromFile(
         File('test/lib/src/fixtures/valid_config_license_override.yaml'),
       );
-      DisclaimerDisplay<String, String> result =
-          await generatePackageDisclaimer<String, String>(
+      final result = await generatePackageDisclaimer<String, String>(
         config: config,
         package: MockedDependencyChecker.withLicenseFile(
           'dodgers',
@@ -130,11 +124,10 @@ void main() {
 
     test('should generate the disclaimer with package source overrides',
         () async {
-      Config config = Config.fromFile(
+      final config = Config.fromFile(
         File('test/lib/src/fixtures/valid_config_source_override.yaml'),
       );
-      DisclaimerDisplay<String, String> result =
-          await generatePackageDisclaimer<String, String>(
+      final result = await generatePackageDisclaimer<String, String>(
         config: config,
         package: MockedDependencyChecker.withLicenseFile(
           'dodgers',
@@ -158,11 +151,10 @@ void main() {
     test(
         'should generate the disclaimer for a single package overriding the copyright with what is defined in the config',
         () async {
-      Config config = Config.fromFile(
+      final config = Config.fromFile(
         File('test/lib/src/fixtures/valid_config_copyright.yaml'),
       );
-      DisclaimerDisplay<String, String> result =
-          await generatePackageDisclaimer<String, String>(
+      final result = await generatePackageDisclaimer<String, String>(
         config: config,
         package: MockedDependencyChecker.withLicenseFile(
           'mlb',
@@ -181,9 +173,9 @@ void main() {
 
     test('should generate the disclaimer for all dependencies of a package',
         () async {
-      Config config =
+      final config =
           Config.fromFile(File('test/lib/src/fixtures/valid_config.yaml'));
-      PackageChecker packageConfig = MockedPackageChecker([
+      final PackageChecker packageConfig = MockedPackageChecker([
         MockedDependencyChecker.withLicenseFile(
           'Dodgers',
           LicenseStatus.approved,
@@ -205,8 +197,7 @@ void main() {
           File('/att/park'),
         ),
       ]);
-      DisclaimerDisplay<List<String>, List<String>> result =
-          await generateDisclaimers<String, String>(
+      final result = await generateDisclaimers<String, String>(
         config: config,
         packageConfig: packageConfig,
         showDirectDepsOnly: false,
@@ -247,9 +238,9 @@ void main() {
 
     test('should generate the disclaimer for direct dependencies of a package',
         () async {
-      Config config =
+      final config =
           Config.fromFile(File('test/lib/src/fixtures/valid_config.yaml'));
-      PackageChecker packageConfig = MockedPackageChecker([
+      final PackageChecker packageConfig = MockedPackageChecker([
         MockedDependencyChecker.withLicenseFile(
           'Dodgers',
           LicenseStatus.approved,
@@ -266,8 +257,7 @@ void main() {
           File('/angles/stadium'),
         ),
       ]);
-      DisclaimerDisplay<List<String>, List<String>> result =
-          await generateDisclaimers<String, String>(
+      final result = await generateDisclaimers<String, String>(
         config: config,
         packageConfig: packageConfig,
         showDirectDepsOnly: true,
@@ -293,9 +283,9 @@ void main() {
     test(
         'should generate the disclaimer for all dependencies of a package that are not dev dependencies',
         () async {
-      Config config =
+      final config =
           Config.fromFile(File('test/lib/src/fixtures/valid_config.yaml'));
-      PackageChecker packageConfig = MockedPackageChecker([
+      final PackageChecker packageConfig = MockedPackageChecker([
         MockedDependencyChecker.withLicenseFile(
           'Dodgers',
           LicenseStatus.approved,
@@ -317,8 +307,7 @@ void main() {
           File('/att/park'),
         ),
       ]);
-      DisclaimerDisplay<List<String>, List<String>> result =
-          await generateDisclaimers<String, String>(
+      final result = await generateDisclaimers<String, String>(
         config: config,
         packageConfig: packageConfig,
         showDirectDepsOnly: false,

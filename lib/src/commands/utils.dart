@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:colorize/colorize.dart';
 
-import 'package:license_checker/src/config.dart';
+import 'package:license_checker2/src/config.dart';
 
 /// Loads the config and prints some info.
 Config? loadConfig(String path) {

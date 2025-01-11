@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:barbecue/barbecue.dart';
 import 'package:colorize/colorize.dart';
 
-import 'package:license_checker/src/dependency_checker.dart';
+import 'package:license_checker2/src/dependency_checker.dart';
 
 /// Formats package licenses as a table.
 Table formatLicenseTable(List<Row> rows) {
@@ -68,8 +68,8 @@ StringBuffer formatDisclaimer({
   required String sourceLocation,
   required File? licenseFile,
 }) {
-  StringBuffer disclaimer = StringBuffer();
-  String? licenseText = licenseFile?.readAsStringSync();
+  final disclaimer = StringBuffer();
+  final licenseText = licenseFile?.readAsStringSync();
 
   disclaimer.writeln(
     'The following software may be included in this product: $packageName',

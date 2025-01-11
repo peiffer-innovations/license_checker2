@@ -1,8 +1,8 @@
 import 'dart:io';
 
-import 'package:license_checker/src/config.dart';
-import 'package:license_checker/src/dependency_checker.dart';
-import 'package:license_checker/src/package_checker.dart';
+import 'package:license_checker2/src/config.dart';
+import 'package:license_checker2/src/dependency_checker.dart';
+import 'package:license_checker2/src/package_checker.dart';
 
 /// Type defintion for the function that formats the display of the disclaimer
 /// based on the license for the CLI.
@@ -25,14 +25,14 @@ typedef DisclaimerFileDisplayFunction<D> = D Function({
 
 /// Encapsulates a generic cli and file display.
 class DisclaimerDisplay<C, F> {
+  /// Default constructor
+  DisclaimerDisplay({required this.cli, required this.file});
+
   /// The display for CLI.
   final C cli;
 
   /// The display for a file.
   final F file;
-
-  /// Default constructor
-  DisclaimerDisplay({required this.cli, required this.file});
 }
 
 /// Generate disclaimers for all packages
@@ -44,10 +44,9 @@ Future<DisclaimerDisplay<List<C>, List<F>>> generateDisclaimers<C, F>({
   required DisclaimerCLIDisplayFunction<C> disclaimerCLIDisplay,
   required DisclaimerFileDisplayFunction<F> disclaimerFileDisplay,
 }) async {
-  DisclaimerDisplay<List<C>, List<F>> disclaimers =
-      DisclaimerDisplay(cli: [], file: []);
+  final disclaimers = DisclaimerDisplay<List<C>, List<F>>(cli: [], file: []);
 
-  for (DependencyChecker package in packageConfig.packages) {
+  for (var package in packageConfig.packages) {
     if (showDirectDepsOnly &&
             !packageConfig.pubspec.dependencies.containsKey(package.name) ||
         config.omitDisclaimer.contains(package.name)) {
@@ -60,8 +59,7 @@ Future<DisclaimerDisplay<List<C>, List<F>>> generateDisclaimers<C, F>({
       // Ignore dev dependencies
       continue;
     }
-    DisclaimerDisplay<C, F>? packageDisclaimer =
-        await generatePackageDisclaimer<C, F>(
+    final packageDisclaimer = await generatePackageDisclaimer<C, F>(
       config: config,
       package: package,
       disclaimerCLIDisplay: disclaimerCLIDisplay,
@@ -81,11 +79,11 @@ Future<DisclaimerDisplay<C, F>> generatePackageDisclaimer<C, F>({
   required DisclaimerCLIDisplayFunction<C> disclaimerCLIDisplay,
   required DisclaimerFileDisplayFunction<F> disclaimerFileDisplay,
 }) async {
-  String copyright =
+  final copyright =
       config.copyrightNotice[package.name] ?? await package.copyright;
-  String licenseName =
+  final licenseName =
       config.packageLicenseOverride[package.name] ?? await package.licenseName;
-  String sourceLocation =
+  final sourceLocation =
       config.packageSourceOverride[package.name] ?? package.sourceLocation;
 
   return DisclaimerDisplay(

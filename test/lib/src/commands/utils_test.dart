@@ -1,17 +1,16 @@
 import 'dart:async';
 
 import 'package:colorize/colorize.dart';
+import 'package:license_checker2/src/commands/utils.dart';
 import 'package:test/test.dart';
-
-import 'package:license_checker/src/commands/utils.dart';
 
 void main() {
   group('Console print functions', () {
-    String stdout = '';
+    var stdout = '';
 
     void Function() overridePrint(void Function() testFn) {
       return () {
-        ZoneSpecification spec = ZoneSpecification(
+        final spec = ZoneSpecification(
           print: (_, __, ___, String msg) {
             // Add to log instead of printing to stdout
             stdout = msg;

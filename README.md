@@ -1,11 +1,13 @@
-[![codecov](https://codecov.io/gh/rufman/license_checker/branch/trunk/graph/badge.svg?token=V20VQE4GPK)](https://codecov.io/gh/rufman/license_checker) [![Dart](https://github.com/rufman/license_checker/actions/workflows/dart.yml/badge.svg)](https://github.com/rufman/license_checker/actions/workflows/dart.yml) [![Pub](https://img.shields.io/pub/v/license_checker.svg)](https://pub.dev/packages/license_checker)
-
 Displays the license of dependencies. Permitted, rejected and approved packages are configurable
 through a YAML config file.
 
+# Fork
+
+**Note** this is a fork of [license_checker](https://pub.dev/packages/license_checker) as it appears that package was abandoned and no longer works with the new [Dart Workspaces](https://dart.dev/tools/pub/workspaces) feature.
+
 # Install
 
-`dart pub global activate license_checker`
+`dart pub global activate license_checker2`
 
 # Getting Started
 
@@ -40,4 +42,4 @@ This file can be referenced when calling `lic_ck check-licenses` with the `--con
 
 `lic_ck` or `lic_ck -h` will display help
 
-For more details on the YAML config options see the [Config documentation](https://pub.dev/documentation/license_checker/latest/generate_disclaimer/Config-class.html)
+For more details on the YAML config options see the [Config documentation](https://pub.dev/documentation/license_checker2/latest/generate_disclaimer/Config-class.html)

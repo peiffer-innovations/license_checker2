@@ -1,13 +1,12 @@
 import 'dart:io';
 
+import 'package:license_checker2/src/config.dart';
+import 'package:package_config/package_config.dart';
 import 'package:pana/pana.dart';
 // ignore: implementation_imports
 import 'package:pana/src/license_detection/license_detector.dart'
     as pana_license_detector;
 import 'package:path/path.dart';
-import 'package:package_config/package_config.dart';
-
-import 'package:license_checker/src/config.dart';
 
 /// Placeholder for when no license file is found.
 const String noFileLicense = 'no-file';
@@ -77,6 +76,12 @@ enum LicenseStatus {
 
 /// Represents a single package that is a dependency of the package we are checking.
 class DependencyChecker {
+  /// Default constructor
+  DependencyChecker({
+    required this.package,
+    required this.config,
+  }) : name = package.name;
+
   /// The name of the package.
   final String name;
 
@@ -86,15 +91,9 @@ class DependencyChecker {
   /// User config for the license checker.
   final Config config;
 
-  /// Default constructor
-  DependencyChecker({
-    required this.package,
-    required this.config,
-  }) : name = package.name;
-
   /// Returns the license status of the package.
   Future<LicenseStatus> get packageLicenseStatus async {
-    String lname = await licenseName;
+    final lname = await licenseName;
 
     // No file found
     if (lname == noFileLicense) {
@@ -126,8 +125,8 @@ class DependencyChecker {
   /// Returns the license file associated with the package. Will check for various
   /// different file names.
   File? get licenseFile {
-    for (String fileName in _licenseFileNames) {
-      File file = File(join(fromUri(package.root), fileName));
+    for (var fileName in _licenseFileNames) {
+      final file = File(join(fromUri(package.root), fileName));
       if (file.existsSync()) {
         return file;
       }
@@ -138,7 +137,7 @@ class DependencyChecker {
 
   /// The license name associated with the package
   Future<String> get licenseName async {
-    String? overriddenLicense = config.packageLicenseOverride[name];
+    final overriddenLicense = config.packageLicenseOverride[name];
     if (overriddenLicense != null) {
       return overriddenLicense;
     }
@@ -147,9 +146,8 @@ class DependencyChecker {
       return noFileLicense;
     }
 
-    String content = await licenseFile!.readAsString();
-    pana_license_detector.Result res =
-        await pana_license_detector.detectLicense(content, 0.9);
+    final content = await licenseFile!.readAsString();
+    final res = await pana_license_detector.detectLicense(content, 0.9);
     // Just the first match (highest probability) as the license.
     return res.matches.isNotEmpty
         ? res.matches.first.identifier
@@ -162,9 +160,9 @@ class DependencyChecker {
       return unknownCopyright;
     }
 
-    String content = await licenseFile!.readAsString();
-    RegExpMatch? match = coprightRegex.firstMatch(content);
-    String? copyrightText = (match?.namedGroup('date') ?? '') +
+    final content = await licenseFile!.readAsString();
+    final match = coprightRegex.firstMatch(content);
+    final copyrightText = (match?.namedGroup('date') ?? '') +
         (match?.namedGroup('holders') ?? unknownCopyright);
 
     return copyrightText;
@@ -172,8 +170,8 @@ class DependencyChecker {
 
   /// Returns the location where the source can be found
   String get sourceLocation {
-    String sourceLocation = unknownSource;
-    File file = File(join(fromUri(package.root), 'pubspec.yaml'));
+    var sourceLocation = unknownSource;
+    final file = File(join(fromUri(package.root), 'pubspec.yaml'));
     if (!file.existsSync()) {
       return throw FileSystemException(
         'pubspec.yaml file not found in package $name.',
@@ -188,7 +186,7 @@ class DependencyChecker {
   }
 
   LicenseStatus? _checkApprovedPackages(String lName) {
-    List<String>? pkgs = config.approvedPackages[lName];
+    final pkgs = config.approvedPackages[lName];
     if (pkgs != null && pkgs.contains(name)) {
       // Has been explicitly approved
       return LicenseStatus.approved;

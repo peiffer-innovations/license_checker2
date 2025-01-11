@@ -1,28 +1,25 @@
 import 'dart:io';
 
-import 'package:barbecue/barbecue.dart';
 import 'package:colorize/colorize.dart';
+import 'package:license_checker2/src/dependency_checker.dart';
+import 'package:license_checker2/src/format.dart';
 import 'package:test/test.dart';
 
-import 'package:license_checker/src/dependency_checker.dart';
-import 'package:license_checker/src/format.dart';
-
 class _ColorizeTest {
-  final Colorize color;
-  final Colorize formatFunction;
-  final String testDescription;
-
   _ColorizeTest({
     required this.color,
     required this.formatFunction,
     required this.testDescription,
   });
+  final Colorize color;
+  final Colorize formatFunction;
+  final String testDescription;
 }
 
 void main() {
   group('Colorize formatting functions', () {
     const text = 'opening day';
-    List<_ColorizeTest> colorizeTests = [
+    final colorizeTests = <_ColorizeTest>[
       _ColorizeTest(
         color: Colorize(text).lightGray().bgBlue(),
         formatFunction: licenseNoInfoFormat(text),
@@ -100,7 +97,7 @@ void main() {
       ),
     ];
 
-    for (_ColorizeTest t in colorizeTests) {
+    for (var t in colorizeTests) {
       test(t.testDescription, () {
         expect(t.formatFunction.toString(), t.color.toString());
       });
@@ -108,7 +105,7 @@ void main() {
   });
 
   group('License table formatting', () {
-    Row r = formatLicenseRow(
+    final r = formatLicenseRow(
       licenseName: 'baseball',
       licenseStatus: LicenseStatus.unknown,
       packageName: 'mlb',
@@ -120,7 +117,7 @@ void main() {
     });
 
     test('should properly format the table', () {
-      Table t = formatLicenseTable([r]);
+      final t = formatLicenseTable([r]);
 
       expect(t.body.rows.length, equals(1));
       expect(t.body.rows[0].cells.length, equals(2));
@@ -132,7 +129,7 @@ void main() {
   });
 
   group('Disclaimer table formatting', () {
-    Row r = formatDisclaimerRow(
+    final r = formatDisclaimerRow(
       licenseName: 'baseball',
       copyright: 'unknown',
       packageName: 'mlb',
@@ -148,7 +145,7 @@ void main() {
     });
 
     test('should properly format the table', () {
-      Table t = formatDisclaimerTable([r]);
+      final t = formatDisclaimerTable([r]);
 
       expect(t.body.rows.length, equals(1));
       expect(t.body.rows[0].cells.length, equals(4));
@@ -168,17 +165,16 @@ void main() {
 
     test('should properly format the file with license and copyright',
         () async {
-      StringBuffer strBuff = formatDisclaimer(
+      final strBuff = formatDisclaimer(
         packageName: 'dodgers',
         licenseName: 'Apache-2.0',
         copyright: '2022 Los Angeles',
         sourceLocation: 'https://chavez.ravine',
         licenseFile: File(
-          Directory.current.absolute.path +
-              '/test/lib/src/fixtures/dodgers/LICENSE',
+          '${Directory.current.absolute.path}/test/lib/src/fixtures/dodgers/LICENSE',
         ),
       );
-      String s = strBuff.toString();
+      final s = strBuff.toString();
 
       expect(
         s,
@@ -198,14 +194,14 @@ void main() {
     });
 
     test('should properly format the file with no license', () async {
-      StringBuffer strBuff = formatDisclaimer(
+      final strBuff = formatDisclaimer(
         packageName: 'angeles',
         licenseName: unknownLicense,
         copyright: unknownCopyright,
         sourceLocation: 'https://www.mlb.com/angels',
         licenseFile: null,
       );
-      String s = strBuff.toString();
+      final s = strBuff.toString();
 
       expect(
         s,

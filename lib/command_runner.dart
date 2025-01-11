@@ -1,6 +1,6 @@
 import 'package:args/command_runner.dart';
-import 'package:license_checker/src/commands/utils.dart';
-import 'package:license_checker/version.g.dart';
+import 'package:license_checker2/src/commands/utils.dart';
+import 'package:license_checker2/version.g.dart';
 
 /// Overarching command runner for license checking related commands
 class LicenseCommandRunner extends CommandRunner<int> {
