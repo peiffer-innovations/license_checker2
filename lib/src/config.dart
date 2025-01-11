@@ -4,7 +4,6 @@ import 'package:yaml/yaml.dart';
 
 /// Represents the config parsed from a config file for the license checker.
 class Config {
-
   Config._({
     required this.permittedLicenses,
     required this.rejectedLicenses,
@@ -53,8 +52,7 @@ class Config {
 
     var stringRejectLicenses = <String>[];
     var stringOmitDisclaimer = <String>[];
-    final stringLicenses =
-        permittedLicenses.whereType<String>().toList();
+    final stringLicenses = permittedLicenses.whereType<String>().toList();
     if (rejectedLicenses != null && rejectedLicenses is List) {
       stringRejectLicenses = rejectedLicenses.whereType<String>().toList();
     }
@@ -81,8 +79,7 @@ class Config {
           );
         }
 
-        final stringApprovedPackages =
-            packages.whereType<String>().toList();
+        final stringApprovedPackages = packages.whereType<String>().toList();
 
         checkedApprovedPackages[license] = stringApprovedPackages;
       }
@@ -106,6 +103,7 @@ class Config {
       omitDisclaimer: stringOmitDisclaimer,
     );
   }
+
   /// [List] of permitted license.
   final List<String> permittedLicenses;
 
