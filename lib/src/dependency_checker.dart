@@ -147,6 +147,13 @@ class DependencyChecker {
     }
 
     final content = await licenseFile!.readAsString();
+    for (final entry in config.customLicenses.entries) {
+      final regExp = RegExp(entry.value.trim());
+      if (regExp.hasMatch(content)) {
+        return entry.key;
+      }
+    }
+
     final res = await pana_license_detector.detectLicense(content, 0.9);
     // Just the first match (highest probability) as the license.
     return res.matches.isNotEmpty

@@ -5,13 +5,14 @@ import 'package:yaml/yaml.dart';
 /// Represents the config parsed from a config file for the license checker.
 class Config {
   Config._({
-    required this.permittedLicenses,
-    required this.rejectedLicenses,
     required this.approvedPackages,
     required this.copyrightNotice,
+    required this.customLicenses,
+    required this.omitDisclaimer,
     required this.packageLicenseOverride,
     required this.packageSourceOverride,
-    required this.omitDisclaimer,
+    required this.permittedLicenses,
+    required this.rejectedLicenses,
   });
 
   /// Parses and creates config from a file
@@ -28,6 +29,7 @@ class Config {
     final Object? rejectedLicenses = config['rejectedLicenses'];
     final Object? approvedPackages = config['approvedPackages'];
     final Object? copyrightNotice = config['copyrightNotice'];
+    final Object? customLicenses = config['customLicenses'];
     final Object? packageLicenseOverride = config['packageLicenseOverride'];
     final Object? packageSourceOverride = config['packageSourceOverride'];
     final Object? omitDisclaimer = config['omitDisclaimer'];
@@ -84,6 +86,11 @@ class Config {
         checkedApprovedPackages[license] = stringApprovedPackages;
       }
     }
+
+    final checkedCustomLicenses = _checkStringMap(
+      customLicenses,
+      'customLicenses',
+    );
     final checkedCopyrightNotice =
         _checkStringMap(copyrightNotice, 'copyrightNotice');
 
@@ -94,13 +101,14 @@ class Config {
         _checkStringMap(packageSourceOverride, 'packageSourceOverride');
 
     return Config._(
-      permittedLicenses: stringLicenses,
       approvedPackages: checkedApprovedPackages,
-      rejectedLicenses: stringRejectLicenses,
       copyrightNotice: checkedCopyrightNotice,
+      customLicenses: checkedCustomLicenses,
+      omitDisclaimer: stringOmitDisclaimer,
       packageLicenseOverride: checkedPackageLicenseOverride,
       packageSourceOverride: checkedPackageSourceOverride,
-      omitDisclaimer: stringOmitDisclaimer,
+      permittedLicenses: stringLicenses,
+      rejectedLicenses: stringRejectLicenses,
     );
   }
 
@@ -115,6 +123,8 @@ class Config {
 
   /// [Map] to override copyright notices for packages, if they are not parsed correctly.
   final Map<String, String> copyrightNotice;
+
+  final Map<String, String> customLicenses;
 
   /// [Map] to override licenses for packages, if they are not parsed correctly.
   final Map<String, String> packageLicenseOverride;

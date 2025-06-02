@@ -1,3 +1,8 @@
+## 2.1.0 - January 11th, 2025
+
+* Updated to support a new Markdown output option to be able to check into Git on runs.
+* Updated to support a new `customLicenses` config option where the key is the license name and the value is a RegEx that can be used to detect that particular license to assist with privately hosted packages for commercial software where they're willing to accept their own license or that of certain vendors without constantly having to add overrides to the license.
+
 ## 2.0.0 - January 11th, 2025
 
 * Forked

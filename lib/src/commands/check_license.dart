@@ -29,6 +29,11 @@ class CheckLicenses extends Command<int> {
         help: 'Sort list of packages alphabetically',
         defaultsTo: false,
       )
+      ..addOption(
+        'output',
+        abbr: 'o',
+        help: 'Output file path',
+      )
       ..addFlag(
         'priority-sort',
         abbr: 'p',
@@ -36,6 +41,7 @@ class CheckLicenses extends Command<int> {
         defaultsTo: false,
       );
   }
+
   @override
   final String name = 'check-licenses';
   @override
@@ -49,6 +55,7 @@ class CheckLicenses extends Command<int> {
     final bool alphaSort = argResults?['alpha-sort'];
     final bool showDirectDepsOnly = globalResults?['direct'];
     final String configPath = globalResults?['config'];
+    final String? outputPath = argResults?['output'];
 
     if (filterApproved) {
       printInfo('Filtering out approved packages ...');
@@ -82,6 +89,24 @@ class CheckLicenses extends Command<int> {
 
     if (rows.isNotEmpty) {
       print(formatLicenseTable(rows.map((e) => e.display).toList()).render());
+    }
+
+    if (outputPath != null) {
+      final outputFile = File(outputPath);
+      try {
+        if (outputFile.existsSync()) {
+          outputFile.createSync(recursive: true);
+        }
+        final outputContent = formatLicenseMarkdown(rows);
+        await outputFile.writeAsString(
+          outputContent,
+          flush: true,
+        );
+        printInfo('Output written to $outputPath');
+      } on FileSystemException catch (error) {
+        printError('Failed to write output: ${error.message}');
+        return ExitCode.ioError.code;
+      }
     }
 
     final exitCode = rows.any(

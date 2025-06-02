@@ -2,8 +2,29 @@ import 'dart:io';
 
 import 'package:barbecue/barbecue.dart';
 import 'package:colorize/colorize.dart';
-
+import 'package:license_checker2/check_license.dart';
 import 'package:license_checker2/src/dependency_checker.dart';
+
+/// Formats package licenses using the Markdown format.
+String formatLicenseMarkdown(List<LicenseDisplayWithPriority> rows) {
+  final buf = StringBuffer();
+
+  buf.writeln('| Package |  Status  | License |');
+  buf.writeln('|---------|:--------:|---------|');
+
+  for (final row in rows) {
+    final approved = row.status == LicenseStatus.approved ||
+        row.status == LicenseStatus.permitted;
+    final status = approved ? ':white_check_mark:' : ':x:';
+    final (start, end) = approved ? ('', '') : ('**_', '_**');
+    buf.writeln(
+      '| [${row.name}](https://pub.dev/packages/${row.name}) | $status | $start${row.status.name}$end |',
+    );
+  }
+  buf.writeln('');
+
+  return buf.toString();
+}
 
 /// Formats package licenses as a table.
 Table formatLicenseTable(List<Row> rows) {
