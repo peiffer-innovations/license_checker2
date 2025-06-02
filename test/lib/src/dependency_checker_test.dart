@@ -331,8 +331,8 @@ void main() {
         testProperty: (d) async {
           return d.sourceLocation;
         },
-        expectedReturnMatcher: () => unknownSource,
-        testDescription: 'should return $unknownSource as the source location',
+        expectedReturnMatcher: () => null,
+        testDescription: 'should return null as the source location',
       ),
       DependencyTest<Object?>(
         testProperty: (d) async {

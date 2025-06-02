@@ -14,18 +14,20 @@ typedef LicenseDisplayFunction<D> = D Function({
 /// Encapsulates a generic license display along with a priority that can be used
 /// for sorting.
 class LicenseDisplayWithPriority<D> {
-  LicenseDisplayWithPriority._(
-    this.display,
-    this.status,
-    this.priority,
-    this.name,
-  );
+  LicenseDisplayWithPriority._({
+    required this.display,
+    required this.name,
+    required this.priority,
+    required this.sourceLocation,
+    required this.status,
+  });
 
   /// Constructs thedisplayed license with a priority set by status.
   factory LicenseDisplayWithPriority.withStatusPriority({
     required D display,
     required LicenseStatus licenseStatus,
     required String packageName,
+    required String? sourceLocation,
   }) {
     var priority = 0;
     switch (licenseStatus) {
@@ -61,21 +63,24 @@ class LicenseDisplayWithPriority<D> {
         }
     }
     return LicenseDisplayWithPriority._(
-      display,
-      licenseStatus,
-      priority,
-      packageName,
+      display: display,
+      name: packageName,
+      priority: priority,
+      sourceLocation: sourceLocation,
+      status: licenseStatus,
     );
   }
 
   /// The formatted license display.
   final D display;
 
-  /// The associated license status.
-  final LicenseStatus status;
-
   /// The priority of the liscense display based on the status.
   final int priority;
+
+  final String? sourceLocation;
+
+  /// The associated license status.
+  final LicenseStatus status;
 
   /// The name of the package
   final String name;
@@ -118,6 +123,7 @@ Future<List<LicenseDisplayWithPriority<D>>> checkAllPackageLicenses<D>({
           ),
           licenseStatus: status,
           packageName: package.name,
+          sourceLocation: package.sourceLocation,
         ),
       );
     }

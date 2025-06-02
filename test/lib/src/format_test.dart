@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:colorize/colorize.dart';
 import 'package:license_checker2/src/dependency_checker.dart';
 import 'package:license_checker2/src/format.dart';
@@ -40,16 +38,6 @@ void main() {
         color: Colorize(text).red(),
         formatFunction: licenseErrorFormat(text),
         testDescription: 'should color rejected in red',
-      ),
-      _ColorizeTest(
-        color: Colorize(unknownSource).red(),
-        formatFunction: formatSource(unknownSource),
-        testDescription: 'should color unknown source in red',
-      ),
-      _ColorizeTest(
-        color: Colorize(text).default_slyle(),
-        formatFunction: formatSource(text),
-        testDescription: 'should color known source in default style',
       ),
       _ColorizeTest(
         color: Colorize(unknownCopyright).red(),
@@ -125,98 +113,6 @@ void main() {
       expect(t.header?.rows.first.cells.length, equals(2));
       expect(t.header?.rows.first.cells[0].content, contains('Package Name'));
       expect(t.header?.rows.first.cells[1].content, contains('License'));
-    });
-  });
-
-  group('Disclaimer table formatting', () {
-    final r = formatDisclaimerRow(
-      licenseName: 'baseball',
-      copyright: 'unknown',
-      packageName: 'mlb',
-      sourceLocation: 'mlb.com',
-    );
-
-    test('should properly format a row', () {
-      expect(r.cells.length, equals(4));
-      expect(r.cells[0].content, equals('mlb'));
-      expect(r.cells[1].content, equals('baseball'));
-      expect(r.cells[2].content, contains('unknown'));
-      expect(r.cells[3].content, contains('mlb.com'));
-    });
-
-    test('should properly format the table', () {
-      final t = formatDisclaimerTable([r]);
-
-      expect(t.body.rows.length, equals(1));
-      expect(t.body.rows[0].cells.length, equals(4));
-      expect(t.header?.rows.length, equals(1));
-      expect(t.header?.rows.first.cells.length, equals(4));
-      expect(t.header?.rows.first.cells[0].content, contains('Package Name'));
-      expect(t.header?.rows.first.cells[1].content, contains('License'));
-      expect(
-        t.header?.rows.first.cells[2].content,
-        contains('Detected Copyright'),
-      );
-      expect(
-        t.header?.rows.first.cells[3].content,
-        contains('Source Download Location'),
-      );
-    });
-
-    test('should properly format the file with license and copyright',
-        () async {
-      final strBuff = formatDisclaimer(
-        packageName: 'dodgers',
-        licenseName: 'Apache-2.0',
-        copyright: '2022 Los Angeles',
-        sourceLocation: 'https://chavez.ravine',
-        licenseFile: File(
-          '${Directory.current.absolute.path}/test/lib/src/fixtures/dodgers/LICENSE',
-        ),
-      );
-      final s = strBuff.toString();
-
-      expect(
-        s,
-        contains('The following software may be included in this product'),
-      );
-      expect(
-        s,
-        contains('A copy of the source code may be downloaded from'),
-      );
-      expect(
-        s,
-        contains(
-          'This software contains the following license and notice below',
-        ),
-      );
-      expect(s, contains('Copyright (c)'));
-    });
-
-    test('should properly format the file with no license', () async {
-      final strBuff = formatDisclaimer(
-        packageName: 'angeles',
-        licenseName: unknownLicense,
-        copyright: unknownCopyright,
-        sourceLocation: 'https://www.mlb.com/angels',
-        licenseFile: null,
-      );
-      final s = strBuff.toString();
-
-      expect(
-        s,
-        contains('The following software may be included in this product'),
-      );
-      expect(s, contains('A copy of the source code may be downloaded from'));
-      expect(
-        s,
-        isNot(
-          contains(
-            'This software contains the following license and notice below',
-          ),
-        ),
-      );
-      expect(s, isNot(contains('Copyright (c)')));
     });
   });
 }

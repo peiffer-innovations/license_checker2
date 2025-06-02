@@ -17,9 +17,6 @@ const String unknownLicense = 'unknown-license';
 /// Placeholder for when the copyright is no known.
 const String unknownCopyright = 'unknown-copyright';
 
-/// Placeholder for when the source location is not known.
-const String unknownSource = 'unknown-source';
-
 /// Regular expression to find and extract the copyright notice.
 RegExp coprightRegex = RegExp(
   r'Copyright\s(\(c\)\s)*(?<date>[0-9]{4})(?<holders>.+)\n',
@@ -176,8 +173,7 @@ class DependencyChecker {
   }
 
   /// Returns the location where the source can be found
-  String get sourceLocation {
-    var sourceLocation = unknownSource;
+  String? get sourceLocation {
     final file = File(join(fromUri(package.root), 'pubspec.yaml'));
     if (!file.existsSync()) {
       return throw FileSystemException(
@@ -185,11 +181,10 @@ class DependencyChecker {
       );
     }
 
-    sourceLocation =
-        Pubspec.parseYaml(file.readAsStringSync()).repositoryOrHomepage ??
-            unknownSource;
+    final contents = file.readAsStringSync();
+    final pubspec = Pubspec.parseYaml(contents);
 
-    return sourceLocation;
+    return pubspec.repositoryOrHomepage;
   }
 
   LicenseStatus? _checkApprovedPackages(String lName) {

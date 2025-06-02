@@ -18,7 +18,7 @@ String formatLicenseMarkdown(List<LicenseDisplayWithPriority> rows) {
     final status = approved ? ':white_check_mark:' : ':x:';
     final (start, end) = approved ? ('', '') : ('**_', '_**');
     buf.writeln(
-      '| [${row.name}](https://pub.dev/packages/${row.name}) | $status | $start${row.status.name}$end |',
+      '| [${row.name}](${row.sourceLocation ?? 'https://pub.dev/packages/${row.name}'}) | $status | $start${row.status.name}$end |',
     );
   }
   buf.writeln('');
@@ -160,20 +160,6 @@ Colorize formatCopyright(String copyright) {
   }
 }
 
-/// Formats the source location to highlight issues found
-Colorize formatSource(String location) {
-  switch (location) {
-    case unknownSource:
-      {
-        return licenseErrorFormat(location);
-      }
-    default:
-      {
-        return Colorize(location).default_slyle();
-      }
-  }
-}
-
 /// Formats a license row.
 Row formatLicenseRow({
   required String packageName,
@@ -184,23 +170,6 @@ Row formatLicenseRow({
     cells: [
       Cell(packageName, style: CellStyle(alignment: TextAlignment.TopRight)),
       Cell(formatLicenseName(licenseName, licenseStatus).toString()),
-    ],
-  );
-}
-
-/// Formats a copyright row.
-Row formatDisclaimerRow({
-  required String packageName,
-  required String licenseName,
-  required String copyright,
-  required String sourceLocation,
-}) {
-  return Row(
-    cells: [
-      Cell(packageName, style: CellStyle(alignment: TextAlignment.TopRight)),
-      Cell(licenseName),
-      Cell(formatCopyright(copyright).toString()),
-      Cell(formatSource(sourceLocation).toString()),
     ],
   );
 }
