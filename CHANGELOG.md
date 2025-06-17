@@ -1,3 +1,8 @@
+## [2.1.0+1] - June 17, 2025
+
+* Automated dependency updates
+
+
 ## 2.1.0 - January 11th, 2025
 
 * Updated to support a new Markdown output option to be able to check into Git on runs.
