@@ -79,6 +79,21 @@ class DependencyChecker {
     required this.config,
   }) : name = package.name;
 
+  static const kFlutterSdkPackage = 'Flutter-SDK';
+
+  static const kSdkPackages = [
+    'flutter',
+    'flutter_driver',
+    'flutter_goldens',
+    'flutter_localizations',
+    'flutter_test',
+    'flutter_tools',
+    'flutter_web_plugins',
+    'fuchsia_remote_debug_protocol',
+    'integration_test',
+    'sky_engine',
+  ];
+
   /// The name of the package.
   final String name;
 
@@ -134,6 +149,10 @@ class DependencyChecker {
 
   /// The license name associated with the package
   Future<String> get licenseName async {
+    if (kSdkPackages.contains(name)) {
+      return kFlutterSdkPackage;
+    }
+
     final overriddenLicense = config.packageLicenseOverride[name];
     if (overriddenLicense != null) {
       return overriddenLicense;
@@ -188,8 +207,9 @@ class DependencyChecker {
   }
 
   LicenseStatus? _checkApprovedPackages(String lName) {
-    final pkgs = config.approvedPackages[lName];
-    if (pkgs != null && pkgs.contains(name)) {
+    final pkgs = config.approvedPackages[lName] ?? const [];
+
+    if (pkgs.contains(name) || kSdkPackages.contains(name)) {
       // Has been explicitly approved
       return LicenseStatus.approved;
     }

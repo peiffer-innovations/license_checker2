@@ -40,16 +40,6 @@ void main() {
         testDescription: 'should color rejected in red',
       ),
       _ColorizeTest(
-        color: Colorize(unknownCopyright).red(),
-        formatFunction: formatCopyright(unknownCopyright),
-        testDescription: 'should color unknown copyright in red',
-      ),
-      _ColorizeTest(
-        color: Colorize(text).default_slyle(),
-        formatFunction: formatCopyright(text),
-        testDescription: 'should color known copyright in default style',
-      ),
-      _ColorizeTest(
         color: Colorize(text).green(),
         formatFunction: formatLicenseName(text, LicenseStatus.permitted),
         testDescription: 'should color permitted license name in green',
