@@ -16,15 +16,17 @@ typedef LicenseDisplayFunction<D> = D Function({
 class LicenseDisplayWithPriority<D> {
   LicenseDisplayWithPriority._({
     required this.display,
+    required this.licenseName,
     required this.name,
     required this.priority,
     required this.sourceLocation,
     required this.status,
   });
 
-  /// Constructs thedisplayed license with a priority set by status.
+  /// Constructs the displayed license with a priority set by status.
   factory LicenseDisplayWithPriority.withStatusPriority({
     required D display,
+    required String? licenseName,
     required LicenseStatus licenseStatus,
     required String packageName,
     required String? sourceLocation,
@@ -64,6 +66,7 @@ class LicenseDisplayWithPriority<D> {
     }
     return LicenseDisplayWithPriority._(
       display: display,
+      licenseName: licenseName ?? 'Unknown',
       name: packageName,
       priority: priority,
       sourceLocation: sourceLocation,
@@ -73,6 +76,9 @@ class LicenseDisplayWithPriority<D> {
 
   /// The formatted license display.
   final D display;
+
+  /// Name of the license.
+  final String licenseName;
 
   /// The priority of the liscense display based on the status.
   final int priority;
@@ -94,6 +100,7 @@ class LicenseDisplayWithPriority<D> {
 ///
 /// Throws a [FileSystemException] if the necessary files are not found.
 Future<List<LicenseDisplayWithPriority<D>>> checkAllPackageLicenses<D>({
+  required List<String> ignore,
   required bool showDirectDepsOnly,
   required bool filterApproved,
   required LicenseDisplayFunction<D> licenseDisplay,
@@ -104,6 +111,10 @@ Future<List<LicenseDisplayWithPriority<D>>> checkAllPackageLicenses<D>({
   final licenses = <LicenseDisplayWithPriority<D>>[];
 
   for (var package in packageConfig.packages) {
+    // Skip packages where we've been explicitly told to ignore them.
+    if (ignore.contains(package.name)) {
+      continue;
+    }
     if (showDirectDepsOnly) {
       // Ignore dependencies not defined in the packages pubspec.yaml
       if (!packageConfig.pubspec.dependencies.containsKey(package.name)) {
@@ -121,6 +132,7 @@ Future<List<LicenseDisplayWithPriority<D>>> checkAllPackageLicenses<D>({
             package: package,
             licenseDisplay: licenseDisplay,
           ),
+          licenseName: await package.licenseName,
           licenseStatus: status,
           packageName: package.name,
           sourceLocation: package.sourceLocation,

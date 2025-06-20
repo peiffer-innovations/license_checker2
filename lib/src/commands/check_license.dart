@@ -15,6 +15,11 @@ class CheckLicenses extends Command<int> {
   /// packages (non approved and permitted packages).
   CheckLicenses() {
     argParser
+      ..addOption(
+        'ignore',
+        abbr: 'g',
+        help: 'Packages to ignore; separated by a comma',
+      )
       ..addFlag(
         'problematic',
         abbr: 'i',
@@ -56,6 +61,8 @@ class CheckLicenses extends Command<int> {
     final bool showDirectDepsOnly = globalResults?['direct'];
     final String configPath = globalResults?['config'];
     final String? outputPath = argResults?['output'];
+    final List<String> ignore =
+        argResults?['ignore']?.split(',') ?? const <String>[];
 
     if (filterApproved) {
       printInfo('Filtering out approved packages ...');
@@ -75,6 +82,7 @@ class CheckLicenses extends Command<int> {
       final packageConfig =
           await PackageChecker.fromCurrentDirectory(config: config);
       rows = await checkAllPackageLicenses<Row>(
+        ignore: ignore,
         packageConfig: packageConfig,
         showDirectDepsOnly: showDirectDepsOnly,
         filterApproved: filterApproved,

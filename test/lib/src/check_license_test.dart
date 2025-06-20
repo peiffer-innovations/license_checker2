@@ -83,6 +83,7 @@ void main() {
         MockedDependencyChecker('Giants', LicenseStatus.rejected),
       ]);
       final result = await checkAllPackageLicenses(
+        ignore: [],
         packageConfig: packageConfig,
         showDirectDepsOnly: false,
         filterApproved: false,
@@ -108,6 +109,7 @@ void main() {
         MockedDependencyChecker('Kings', LicenseStatus.approved),
       ]);
       final result = await checkAllPackageLicenses(
+        ignore: [],
         packageConfig: packageConfig,
         showDirectDepsOnly: true,
         filterApproved: false,
@@ -137,6 +139,7 @@ void main() {
         MockedDependencyChecker('Rockies', LicenseStatus.noLicense),
       ]);
       final result = await checkAllPackageLicenses(
+        ignore: [],
         packageConfig: packageConfig,
         showDirectDepsOnly: false,
         filterApproved: true,
@@ -170,6 +173,7 @@ void main() {
         MockedDependencyChecker('Rockies', LicenseStatus.noLicense),
       ]);
       final result = await checkAllPackageLicenses(
+        ignore: [],
         packageConfig: packageConfig,
         showDirectDepsOnly: false,
         filterApproved: false,
@@ -208,6 +212,7 @@ void main() {
         MockedDependencyChecker('Rockies', LicenseStatus.noLicense),
       ]);
       final result = await checkAllPackageLicenses(
+        ignore: [],
         packageConfig: packageConfig,
         showDirectDepsOnly: false,
         filterApproved: false,
@@ -246,6 +251,7 @@ void main() {
         MockedDependencyChecker('Rockies', LicenseStatus.noLicense),
       ]);
       final result = await checkAllPackageLicenses(
+        ignore: [],
         packageConfig: packageConfig,
         showDirectDepsOnly: false,
         filterApproved: false,

@@ -1,3 +1,9 @@
+## 2.3.0 - June 20th, 2025
+
+* Fixed issue with `flutter_gen` when using the legacy `i18n` mechanism.
+* Added `--ignore` to completely ignore comma delimited list of packages from the scan.
+* Fixed markdown to display the name of the license rather than the status.
+
 ## 2.2.0 - June 18th, 2025
 
 * Updated to automatically accept the licenses for packages provided by Dart / Flutter SDKs

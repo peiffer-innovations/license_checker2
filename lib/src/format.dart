@@ -10,13 +10,17 @@ String formatLicenseMarkdown(List<LicenseDisplayWithPriority> rows) {
   buf.writeln('| Package |  Status  | License |');
   buf.writeln('|---------|:--------:|---------|');
 
-  for (final row in rows) {
+  final sorted = List<LicenseDisplayWithPriority>.from(rows)
+    ..sort((a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()));
+
+  for (final row in sorted) {
     final approved = row.status == LicenseStatus.approved ||
         row.status == LicenseStatus.permitted;
     final status = approved ? ':white_check_mark:' : ':x:';
     final (start, end) = approved ? ('', '') : ('**_', '_**');
+    final license = row.licenseName;
     buf.writeln(
-      '| [${row.name}](${row.sourceLocation ?? 'https://pub.dev/packages/${row.name}'}) | $status | $start${row.status.name}$end |',
+      '| [${row.name}](${row.sourceLocation ?? 'https://pub.dev/packages/${row.name}'}) | $status | $start$license$end |',
     );
   }
   buf.writeln('');

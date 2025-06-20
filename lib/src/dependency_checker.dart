@@ -195,9 +195,7 @@ class DependencyChecker {
   String? get sourceLocation {
     final file = File(join(fromUri(package.root), 'pubspec.yaml'));
     if (!file.existsSync()) {
-      return throw FileSystemException(
-        'pubspec.yaml file not found in package $name.',
-      );
+      return null;
     }
 
     final contents = file.readAsStringSync();
