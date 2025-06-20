@@ -400,16 +400,9 @@ void main() {
         testDescription: 'should return $unknownCopyright',
       ),
       DependencyTest<Object?>(
-        testProperty: (d) => () => d.sourceLocation,
-        expectedReturnMatcher: () => throwsA(
-          predicate(
-            (e) =>
-                e is FileSystemException &&
-                e.message
-                    .contains('pubspec.yaml file not found in package padres'),
-          ),
-        ),
-        testDescription: 'should throw an exception for pubspec.yaml file',
+        testProperty: (d) => d.sourceLocation,
+        expectedReturnMatcher: () => isNull,
+        testDescription: 'should return null for pubspec.yaml file',
       ),
     ];
 
