@@ -1,3 +1,8 @@
+## [2.3.0+1] - July 15, 2025
+
+* Automated dependency updates
+
+
 ## 2.3.0 - June 20th, 2025
 
 * Fixed issue with `flutter_gen` when using the legacy `i18n` mechanism.
