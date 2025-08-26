@@ -1,39 +1,39 @@
-name: license_checker2
-description: A tool to view and check the licenses of a package's dependencies. It also generates a disclaimer file containing all the package licenses.
-version: 2.3.0
-homepage: https://github.com/rufman/license_checker
+name: "license_checker2"
+description: "A tool to view and check the licenses of a package's dependencies. It also generates a disclaimer file containing all the package licenses."
+version: "2.3.0+1"
+homepage: "https://github.com/rufman/license_checker"
 
 environment:
-  sdk: ^3.6.0
+  sdk: "^3.6.0"
 
 dependencies:
-  args: ^2.6.0
-  barbecue: ^0.5.0
-  colorize: ^3.0.0
-  io: ^1.0.5
-  package_config: ^2.1.1
-  pana: ^0.22.21
-  path: ^1.9.1
-  yaml: ^3.1.3
+  args: "^2.7.0"
+  barbecue: "^0.5.0"
+  colorize: "^3.0.0"
+  io: "^1.0.5"
+  package_config: "^2.2.0"
+  pana: "^0.22.22"
+  path: "^1.9.1"
+  yaml: "^3.1.3"
 
 dev_dependencies:
-  flutter_lints: ^5.0.0
-  mockito: ^5.4.5
-  test: ^1.25.14
+  flutter_lints: "^6.0.0"
+  mockito: "^5.5.0"
+  test: "^1.26.3"
 
 executables:
-  lic_ck: license_checker
+  lic_ck: "license_checker"
 
 permittedLicenses:
-  - 'Apache-2.0'
-  - 'BSD-2-Clause'
-  - 'BSD-3-Clause'
-  - 'MIT'
-  - 'MIT-Modern-Variant'
-  - 'MPL-2.0'
-  - 'Zlib'
+  - "Apache-2.0"
+  - "BSD-2-Clause"
+  - "BSD-3-Clause"
+  - "MIT"
+  - "MIT-Modern-Variant"
+  - "MPL-2.0"
+  - "Zlib"
 
 packageLicenseOverride:
-  fuchsia_remote_debug_protocol: 'BSD-3-Clause'
-  integration_test: 'BSD-3-Clause'
-  rxdart: 'Apache-2.0'
+  fuchsia_remote_debug_protocol: "BSD-3-Clause"
+  integration_test: "BSD-3-Clause"
+  rxdart: "Apache-2.0"
