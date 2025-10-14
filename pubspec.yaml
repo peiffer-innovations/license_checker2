@@ -1,6 +1,6 @@
 name: "license_checker2"
 description: "A tool to view and check the licenses of a package's dependencies. It also generates a disclaimer file containing all the package licenses."
-version: "2.3.0+1"
+version: "2.3.0+2"
 homepage: "https://github.com/rufman/license_checker"
 
 environment:
@@ -12,7 +12,7 @@ dependencies:
   colorize: "^3.0.0"
   io: "^1.0.5"
   package_config: "^2.2.0"
-  pana: "^0.22.23"
+  pana: "^0.22.24"
   path: "^1.9.1"
   yaml: "^3.1.3"
 
