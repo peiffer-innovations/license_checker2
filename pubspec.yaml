@@ -1,6 +1,6 @@
 name: "license_checker2"
 description: "A tool to view and check the licenses of a package's dependencies. It also generates a disclaimer file containing all the package licenses."
-version: "2.3.0+4"
+version: "2.3.0+5"
 homepage: "https://github.com/rufman/license_checker"
 
 environment:
@@ -19,7 +19,7 @@ dependencies:
 dev_dependencies:
   flutter_lints: "^6.0.0"
   mockito: "^5.5.1"
-  test: "^1.26.3"
+  test: "^1.27.0"
 
 executables:
   lic_ck: "license_checker"
