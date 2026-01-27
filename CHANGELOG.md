@@ -1,3 +1,8 @@
+## [2.3.0+11] - January 27, 2026
+
+* Automated dependency updates
+
+
 ## [2.3.0+10] - January 20, 2026
 
 * Automated dependency updates
