@@ -127,13 +127,11 @@ class CheckLicenses extends Command<int> {
       );
     }
 
-    final exitCode =
-        failed.isEmpty ? ExitCode.software.code : ExitCode.success.code;
-    if (rows.isEmpty || exitCode == ExitCode.success.code) {
+    if (rows.isEmpty) {
       printSuccess('No package licenses need approval!');
     }
 
     // Return error status code if any package has a license that has not been approved.
-    return exitCode;
+    return failed.isNotEmpty ? ExitCode.software.code : ExitCode.success.code;
   }
 }

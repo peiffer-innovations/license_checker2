@@ -1,4 +1,4 @@
-## [2.3.1] - February 11, 2026
+## [2.3.1+1] - February 11, 2026
 
 * Improved error output when a license fails to call out the specific failure.
 
