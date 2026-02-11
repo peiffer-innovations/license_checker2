@@ -123,7 +123,7 @@ class CheckLicenses extends Command<int> {
 
     for (final f in failed) {
       printError(
-        'Package: [${f.name}] failed due to license: [${f.licenseName}] and status [${f.status.name}].',
+        'Package: [${f.name}] failed due to license: [${f.licenseName}] and status: [${f.status.name}].',
       );
     }
 
