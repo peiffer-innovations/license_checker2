@@ -1,3 +1,8 @@
+## [2.3.1] - February 11, 2026
+
+* Improved error output when a license fails to call out the specific failure.
+
+
 ## [2.3.0+12] - February 10, 2026
 
 * Automated dependency updates

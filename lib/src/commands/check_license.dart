@@ -117,13 +117,18 @@ class CheckLicenses extends Command<int> {
       }
     }
 
-    final exitCode = rows.any(
-      (r) =>
-          r.status != LicenseStatus.approved &&
-          r.status != LicenseStatus.permitted,
-    )
-        ? ExitCode.software.code
-        : ExitCode.success.code;
+    final failed = rows.where((r) =>
+        r.status != LicenseStatus.approved &&
+        r.status != LicenseStatus.permitted);
+
+    for (final f in failed) {
+      printError(
+        'Package: [${f.name}] failed due to license: [${f.licenseName}] and status [${f.status.name}].',
+      );
+    }
+
+    final exitCode =
+        failed.isEmpty ? ExitCode.software.code : ExitCode.success.code;
     if (rows.isEmpty || exitCode == ExitCode.success.code) {
       printSuccess('No package licenses need approval!');
     }
