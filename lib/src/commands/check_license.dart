@@ -127,7 +127,7 @@ class CheckLicenses extends Command<int> {
       );
     }
 
-    if (rows.isEmpty) {
+    if (failed.isEmpty) {
       printSuccess('No package licenses need approval!');
     }
 
